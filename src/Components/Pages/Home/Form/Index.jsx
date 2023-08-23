@@ -3,19 +3,47 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { INITIAL_STATE } from "../../../../config/const";
 import { getItem, setItem} from "../../../../utils/localstorage";
+import { reducer } from "../../../../reducers";
 
 function Form({dataLS, setDataLS}) {
-
-	const [inputs, dispatch] = useReducer(
-        (currentInputs, newInputsValues) => ({
-            ...currentInputs,
-            ...newInputsValues,
-        }),
-        INITIAL_STATE
-    );
     const [errorMsg, setErrorMsg] = useState(null);
 
-	const handleChangeInputs = ({ target: { name, value } }) => dispatch({ [name]: value });
+	// const [inputs, dispatch] = useReducer(
+    //     (currentInputs, newInputsValues) => ({
+    //         ...currentInputs,
+    //         ...newInputsValues,
+    //     }),
+    //     INITIAL_STATE
+    // );
+   
+	// const handleChangeInputs = ({ target: { name, value } }) => dispatch({ [name]: value });
+        
+	// function submitHandler(e) {
+    //     e.preventDefault();
+    //     for (const key in inputs) {
+    //         if ( !inputs[key] ) {
+    //             setErrorMsg(`Veuillez renseigner le champs ${key}`);
+    //             return;
+    //         }
+    //     }
+    //     const { alias, msg, genre } = inputs;
+	// 	const data = {
+	// 		id: uuidv4(),
+	// 		alias, 
+	// 		msg,
+    //         genre,
+	// 		date: new Date().toLocaleDateString(),
+	// 		time: new Date().toLocaleTimeString(),
+	// 	}
+    //     dispatch(INITIAL_STATE);
+    //     setErrorMsg("");
+    //     setItem("data", [...dataLS, { ...data }]);
+    //     setDataLS(getItem("data"));
+    // }
+    // autre méthode avec le hook reducer
+    const [inputs, dispatch] = useReducer(reducer, INITIAL_STATE);
+
+	const handleChangeInputs = ({ target: { name, value } }) => dispatch({ type: "set_msg", name, value});
         
 	function submitHandler(e) {
         e.preventDefault();
@@ -34,7 +62,7 @@ function Form({dataLS, setDataLS}) {
 			date: new Date().toLocaleDateString(),
 			time: new Date().toLocaleTimeString(),
 		}
-        dispatch(INITIAL_STATE);
+        dispatch({ type: "reset_msg"});
         setErrorMsg("");
         setItem("data", [...dataLS, { ...data }]);
         setDataLS(getItem("data"));
